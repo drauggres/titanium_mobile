@@ -1330,7 +1330,6 @@ public abstract class TiUIView implements KrollProxyListener, OnFocusChangeListe
 			nativeView.setOnTouchListener(null);
 			nativeView.setOnDragListener(null);
 			nativeView.setOnFocusChangeListener(null);
-			nativeView = null;
 			borderView = null;
 			if (proxy != null) {
 				proxy.setModelListener(null);
@@ -1344,6 +1343,8 @@ public abstract class TiUIView implements KrollProxyListener, OnFocusChangeListe
 			children.clear();
 			children = null;
 		}
+		nativeView = null;
+		parent = null;
 		proxy = null;
 		layoutParams = null;
 	}
