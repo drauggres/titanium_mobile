@@ -1091,6 +1091,11 @@ public class TiC
 	/**
 	 * @module.api
 	 */
+	public static final String PROPERTY_CACHE = "cache";
+
+	/**
+	 * @module.api
+	 */
 	public static final String PROPERTY_CACHE_MODE = "cacheMode";
 
 	/**
