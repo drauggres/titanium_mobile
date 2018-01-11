@@ -310,6 +310,7 @@ public class TiC
 	public static final String PROPERTY_BUTTON_CLICK_REQUIRED = "buttonClickRequired";
 	public static final String PROPERTY_BYTE_ORDER = "byteOrder";
 	public static final String PROPERTY_BYPASS_DND = "bypassDnd";
+	public static final String PROPERTY_CACHE = "cache";
 	public static final String PROPERTY_CACHE_MODE = "cacheMode";
 	public static final String PROPERTY_CACHE_SIZE = "cacheSize";
 	public static final String PROPERTY_CALLBACK = "callback";
