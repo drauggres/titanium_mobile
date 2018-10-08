@@ -239,17 +239,6 @@ public class TiFileHelper implements Handler.Callback
 	private InputStream handleNetworkURL(String path, boolean useCaches) throws IOException
 	{
 		InputStream is = null;
-		try {
-			URI uri = new URI(path);
-			if (TiResponseCache.peek(uri)) {
-				InputStream stream = TiResponseCache.openCachedStream(uri);
-				if (stream != null) {
-					// Fallback to actual download when null
-					return stream;
-				}
-			}
-		} catch (URISyntaxException uriException) {
-		}
 
 		URL u = new URL(path);
 		HttpURLConnection client = (HttpURLConnection) u.openConnection();

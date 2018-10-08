@@ -28,8 +28,6 @@ import org.appcelerator.titanium.TiDimension;
 import org.appcelerator.titanium.TiFileProxy;
 import org.appcelerator.titanium.io.TiBaseFile;
 import org.appcelerator.titanium.util.TiConvert;
-import org.appcelerator.titanium.util.TiDownloadListener;
-import org.appcelerator.titanium.util.TiDownloadManager;
 import org.appcelerator.titanium.util.TiFileHelper;
 import org.appcelerator.titanium.util.TiImageHelper;
 import org.appcelerator.titanium.util.TiImageLruCache;
@@ -826,24 +824,6 @@ public class TiDrawableReference
 			Log.d(TAG, sb.toString());
 		}
 		return b;
-	}
-
-	/**
-	 * Just runs TiDownloadManager.download(URI, listener) giving it the passed listener.
-	 */
-	public void getBitmapAsync(TiDownloadListener listener)
-	{
-		if (!isNetworkUrl()) {
-			Log.w(TAG, "getBitmapAsync called on non-network url.  Will attempt load.", Log.DEBUG_MODE);
-		}
-
-		try {
-			TiDownloadManager.getInstance().download(new URI(TiUrl.getCleanUri(url).toString()), listener);
-		} catch (URISyntaxException e) {
-			Log.e(TAG, "URI Invalid: " + url, e);
-		} catch (NullPointerException e) {
-			Log.e(TAG, "NullPointerException: " + url, e);
-		}
 	}
 
 	/**

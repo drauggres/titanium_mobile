@@ -26,12 +26,9 @@ import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.TiLifecycle.OnLifecycleEvent;
 import org.appcelerator.titanium.proxy.TiViewProxy;
 import org.appcelerator.titanium.util.TiConvert;
-import org.appcelerator.titanium.util.TiDownloadListener;
-import org.appcelerator.titanium.util.TiDownloadManager;
 import org.appcelerator.titanium.util.TiImageLruCache;
 import org.appcelerator.titanium.util.TiLoadImageListener;
 import org.appcelerator.titanium.util.TiLoadImageManager;
-import org.appcelerator.titanium.util.TiResponseCache;
 import org.appcelerator.titanium.util.TiUrl;
 import org.appcelerator.titanium.view.TiDrawableReference;
 import org.appcelerator.titanium.view.TiUIView;
@@ -72,7 +69,6 @@ public class TiUIImageView extends TiUIView implements OnLifecycleEvent, Handler
 
 	private ArrayList<TiDrawableReference> imageSources;
 	private TiDrawableReference defaultImageSource;
-	private TiDownloadListener downloadListener;
 	private TiLoadImageListener loadImageListener;
 	private Object releasedLock = new Object();
 
@@ -93,36 +89,6 @@ public class TiUIImageView extends TiUIView implements OnLifecycleEvent, Handler
 		Log.d(TAG, "Creating an ImageView", Log.DEBUG_MODE);
 
 		TiImageView view = new TiImageView(proxy.getActivity(), proxy);
-
-		downloadListener = new TiDownloadListener() {
-			@Override
-			public void downloadTaskFinished(URI uri)
-			{
-				if (!TiResponseCache.peek(uri)) {
-					// The requested image did not make it into our TiResponseCache,
-					// possibly because it had a header forbidding that. Now get it
-					// via the "old way" (not relying on cache).
-					TiLoadImageManager.getInstance().load(TiDrawableReference.fromUrl(imageViewProxy, uri.toString()),
-														  loadImageListener);
-				}
-			}
-
-			@Override
-			public void downloadTaskFailed(URI uri)
-			{
-				// If the download failed, fire an error event
-				fireError("Download Failed", uri.toString());
-			}
-
-			// Handle decoding and caching in the background thread so it won't block UI.
-			@Override
-			public void postDownload(URI uri)
-			{
-				if (TiResponseCache.peek(uri)) {
-					handleCacheAndSetImage(TiDrawableReference.fromUrl(imageViewProxy, uri.toString()));
-				}
-			}
-		};
 
 		loadImageListener = new TiLoadImageListener() {
 			@Override
@@ -733,30 +699,7 @@ public class TiUIImageView extends TiUIView implements OnLifecycleEvent, Handler
 				}
 			}
 
-			if (imageref.isNetworkUrl()) {
-				boolean isCachedInDisk = false;
-				URI uri = null;
-				try {
-					String imageUrl = TiUrl.getCleanUri(imageref.getUrl()).toString();
-					uri = new URI(imageUrl);
-					isCachedInDisk = TiResponseCache.peek(uri);
-				} catch (URISyntaxException e) {
-					Log.e(TAG, "URISyntaxException for url " + imageref.getUrl(), e);
-				} catch (NullPointerException e) {
-					Log.e(TAG, "NullPointerException for url " + imageref.getUrl(), e);
-				}
-
-				// Check if the image is not cached in disc and the uri is valid.
-				if (!isCachedInDisk && uri != null) {
-					TiDownloadManager.getInstance().download(uri, downloadListener);
-				} else {
-					// If the image has been cached in disk or the uri is not valid,
-					// fetch and cache it and update the UI.
-					TiLoadImageManager.getInstance().load(imageref, loadImageListener);
-				}
-			} else {
-				TiLoadImageManager.getInstance().load(imageref, loadImageListener);
-			}
+			TiLoadImageManager.getInstance().load(imageref, loadImageListener);
 		} else {
 			setImages();
 		}

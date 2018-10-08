@@ -37,7 +37,6 @@ import org.appcelerator.titanium.util.TiBlobLruCache;
 import org.appcelerator.titanium.util.TiFileHelper;
 import org.appcelerator.titanium.util.TiImageLruCache;
 import org.appcelerator.titanium.util.TiPlatformHelper;
-import org.appcelerator.titanium.util.TiResponseCache;
 import org.appcelerator.titanium.util.TiUIHelper;
 import org.appcelerator.titanium.util.TiWeakList;
 import org.json.JSONException;
@@ -98,7 +97,6 @@ public abstract class TiApplication extends Application implements KrollApplicat
 	private String density;
 	private String buildVersion = "", buildTimestamp = "", buildHash = "";
 	private String defaultUnit;
-	private TiResponseCache responseCache;
 	private BroadcastReceiver externalStorageReceiver;
 	private AccessibilityManager accessibilityManager = null;
 	private boolean forceFinishRootActivity = false;
@@ -383,7 +381,6 @@ public abstract class TiApplication extends Application implements KrollApplicat
 	@Override
 	public void onTerminate()
 	{
-		stopExternalStorageMonitor();
 		accessibilityManager = null;
 		super.onTerminate();
 	}
@@ -451,11 +448,7 @@ public abstract class TiApplication extends Application implements KrollApplicat
 		TiConfig.DEBUG = TiConfig.LOGD = appProperties.getBool("ti.android.debug", false);
 		USE_LEGACY_WINDOW = appProperties.getBool(PROPERTY_USE_LEGACY_WINDOW, false);
 
-		startExternalStorageMonitor();
-
 		// Register the default cache handler
-		responseCache = new TiResponseCache(getRemoteCacheDir(), this);
-		TiResponseCache.setDefault(responseCache);
 		KrollRuntime.setPrimaryExceptionHandler(new TiExceptionHandler());
 	}
 
@@ -807,41 +800,6 @@ public abstract class TiApplication extends Application implements KrollApplicat
 	public boolean isDebuggerEnabled()
 	{
 		return getDeployData().isDebuggerEnabled();
-	}
-
-	private void startExternalStorageMonitor()
-	{
-		externalStorageReceiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent)
-			{
-				if (Intent.ACTION_MEDIA_MOUNTED.equals(intent.getAction())) {
-					responseCache.setCacheDir(getRemoteCacheDir());
-					TiResponseCache.setDefault(responseCache);
-					Log.i(TAG, "SD card has been mounted. Enabling cache for http responses.", Log.DEBUG_MODE);
-
-				} else {
-					// if the sd card is removed, we don't cache http responses
-					TiResponseCache.setDefault(null);
-					Log.i(TAG, "SD card has been unmounted. Disabling cache for http responses.", Log.DEBUG_MODE);
-				}
-			}
-		};
-
-		IntentFilter filter = new IntentFilter();
-
-		filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
-		filter.addAction(Intent.ACTION_MEDIA_REMOVED);
-		filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
-		filter.addAction(Intent.ACTION_MEDIA_BAD_REMOVAL);
-		filter.addDataScheme("file");
-
-		registerReceiver(externalStorageReceiver, filter);
-	}
-
-	private void stopExternalStorageMonitor()
-	{
-		unregisterReceiver(externalStorageReceiver);
 	}
 
 	public void dispose()
