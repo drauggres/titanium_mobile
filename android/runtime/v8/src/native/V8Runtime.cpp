@@ -40,6 +40,7 @@ Persistent<Function> V8Runtime::runModuleFunction;
 jobject V8Runtime::javaInstance;
 Platform* V8Runtime::platform = nullptr;
 Isolate* V8Runtime::v8_isolate = nullptr;
+Locker* V8Runtime::v8_locker = nullptr;
 bool V8Runtime::debuggerEnabled = false;
 bool V8Runtime::DBG = false;
 bool V8Runtime::initialized = false;
@@ -226,6 +227,7 @@ JNIEXPORT void JNICALL Java_org_appcelerator_kroll_runtime_v8_V8Runtime_nativeIn
 		Isolate::CreateParams create_params;
 		create_params.array_buffer_allocator = &allocator;
 		isolate = Isolate::New(create_params);
+		V8Runtime::v8_locker = new Locker(isolate);
 		isolate->Enter();
 
 		V8Runtime::v8_isolate = isolate;
@@ -238,6 +240,7 @@ JNIEXPORT void JNICALL Java_org_appcelerator_kroll_runtime_v8_V8Runtime_nativeIn
 		isolate->SetCaptureStackTraceForUncaughtExceptions(true, 10, v8::StackTrace::kOverview);
 	} else {
 		isolate = V8Runtime::v8_isolate;
+		V8Runtime::v8_locker = new Locker(isolate);
 		isolate->Enter();
 	}
 
@@ -471,6 +474,7 @@ JNIEXPORT void JNICALL Java_org_appcelerator_kroll_runtime_v8_V8Runtime_nativeDi
 
 	// Do final cleanup
 	V8Runtime::v8_isolate->Exit();
+	delete(V8Runtime::v8_locker);
 	//V8Runtime::v8_isolate->Dispose();
 	//V8::Dispose();
 	//V8::ShutdownPlatform();

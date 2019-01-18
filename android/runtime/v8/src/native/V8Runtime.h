@@ -21,6 +21,7 @@ public:
 	static Persistent<Array> moduleContexts;
 	
 	static Isolate* v8_isolate;
+	static Locker* v8_locker;
 	static Platform* platform;
 
 	static jobject javaInstance;
