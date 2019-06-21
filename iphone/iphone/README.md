@@ -1,4 +1,4 @@
-# Building and Debugging the Tiatnium iOS Source
+# Building and Debugging the Titanium iOS Source
 > ###### Tested with Titanium SDK 6.x 
 
 ## Titanium Core
