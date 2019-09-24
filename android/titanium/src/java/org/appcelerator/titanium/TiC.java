@@ -2596,6 +2596,21 @@ public class TiC
 	/**
 	 * @module.api
 	 */
+	public static final String PROPERTY_PASSWORD_VISIBILITY_TOGGLE_COLOR = "passwordVisibilityToggleColor";
+
+	/**
+	 * @module.api
+	 */
+	public static final String PROPERTY_PASSWORD_VISIBILITY_TOGGLE_ENABLED = "passwordVisibilityToggleEnabled";
+
+	/**
+	 * @module.api
+	 */
+	public static final String PROPERTY_PASSWORD_VISIBILITY_TOGGLE_TINT_COLOR = "passwordVisibilityToggleTintColor";
+
+	/**
+	 * @module.api
+	 */
 	public static final String PROPERTY_PATH = "path";
 
 	/**
