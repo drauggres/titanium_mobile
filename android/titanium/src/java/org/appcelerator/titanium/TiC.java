@@ -789,6 +789,7 @@ public class TiC
 	public static final String PROPERTY_VIEW = "view";
 	public static final String PROPERTY_VIEWS = "views";
 	public static final String PROPERTY_VOLUME = "volume";
+	public static final String PROPERTY_PLAYBACK_RATE = "playbackRate";
 	public static final String PROPERTY_WAKE_LOCK = "wakeLock";
 	public static final String PROPERTY_WEBVIEW_IGNORE_SSL_ERROR = "ignoreSslError";
 	public static final String PROPERTY_WHEN = "when";

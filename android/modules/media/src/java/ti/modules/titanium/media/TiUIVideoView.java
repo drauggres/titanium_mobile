@@ -135,6 +135,10 @@ public class TiUIVideoView
 		if (d.containsKey(TiC.PROPERTY_REPEAT_MODE)) {
 			videoView.setRepeatMode(TiConvert.toInt(d, TiC.PROPERTY_REPEAT_MODE));
 		}
+
+		if (d.containsKey(TiC.PROPERTY_PLAYBACK_RATE)) {
+			videoView.setPlaybackRate(TiConvert.toFloat(d, TiC.PROPERTY_PLAYBACK_RATE, 1.0f));
+		}
 	}
 
 	@Override
@@ -156,7 +160,8 @@ public class TiUIVideoView
 			videoView.setScalingMode(TiConvert.toInt(newValue));
 		} else if (key.equals(TiC.PROPERTY_VOLUME)) {
 			videoView.setVolume(TiConvert.toFloat(newValue));
-
+		} else if (key.equals(TiC.PROPERTY_PLAYBACK_RATE)) {
+			videoView.setPlaybackRate(TiConvert.toFloat(newValue));
 		} else if (key.equals(TiC.PROPERTY_REPEAT_MODE)) {
 			videoView.setRepeatMode(TiConvert.toInt(newValue));
 		} else if (key.equals(TiC.PROPERTY_SHOWS_CONTROLS)) {
@@ -236,6 +241,15 @@ public class TiUIVideoView
 		}
 	}
 
+	public void setPlaybackRate(float rate)
+	{
+		if (videoView == null) {
+			return;
+		}
+
+		videoView.setPlaybackRate(rate);
+	}
+
 	public void hideMediaController()
 	{
 		if (mediaController != null && mediaController.isShowing()) {
@@ -291,6 +305,14 @@ public class TiUIVideoView
 			return 0;
 		}
 		return videoView.getCurrentPosition();
+	}
+
+	public float getPlaybackRate()
+	{
+		if (videoView == null) {
+			return 0;
+		}
+		return videoView.getPlaybackRate();
 	}
 
 	public void seek(int milliseconds)
