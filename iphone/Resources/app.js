@@ -7,15 +7,14 @@
  */
 
 var win = Ti.UI.createWindow({
-    backgroundColor: '#fff'
+	backgroundColor: '#fff'
 });
 
-var btn = Ti.UI.createButton({
-    title: 'Trigger'
-});
-
-btn.addEventListener('click', function() {
-    Ti.API.info(L('hello_world'));
+const btn = Ti.UI.createButton({
+	image: Ti.UI.iOS.systemImage('greetingcard', { weight: 'light', size: 60 }),
+    backgroundColor: 'green',
+	width: 80,
+	height: 80
 });
 
 win.add(btn);
