@@ -542,6 +542,7 @@ public class TiC
 	public static final String PROPERTY_MAX_LINES = "maxLines";
 	public static final String PROPERTY_MAX_ROW_HEIGHT = "maxRowHeight";
 	public static final String PROPERTY_MEDIA = "media";
+	public static final String PROPERTY_MEDIA_COLUMNS = "mediaColumns";
 	public static final String PROPERTY_MEDIA_CONTROL_STYLE = "mediaControlStyle";
 	public static final String PROPERTY_MEDIA_TYPES = "mediaTypes";
 	public static final String PROPERTY_MENU = EVENT_PROPERTY_MENU;
