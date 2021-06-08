@@ -324,7 +324,7 @@ public abstract class TiUIView implements KrollProxyListener, OnFocusChangeListe
 		this.nativeView = view;
 		boolean clickable = true;
 
-		if (proxy.hasProperty(TiC.PROPERTY_TOUCH_ENABLED)) {
+		if (proxy != null && proxy.hasProperty(TiC.PROPERTY_TOUCH_ENABLED)) {
 			clickable = TiConvert.toBoolean(proxy.getProperty(TiC.PROPERTY_TOUCH_ENABLED), true);
 		}
 		doSetClickable(nativeView, clickable);
@@ -343,6 +343,9 @@ public abstract class TiUIView implements KrollProxyListener, OnFocusChangeListe
 	 */
 	public void animate()
 	{
+		if (proxy == null) {
+			return;
+		}
 		View outerView = getOuterView();
 		if (outerView == null || bTransformPending.get()) {
 			return;
@@ -433,6 +436,9 @@ public abstract class TiUIView implements KrollProxyListener, OnFocusChangeListe
 
 	public float[] getPreTranslationValue(float[] points)
 	{
+		if (layoutParams == null) {
+			return points;
+		}
 		if (layoutParams.optionTransform != null) {
 			TiMatrixAnimation matrixAnimation = animBuilder.createMatrixAnimation(layoutParams.optionTransform);
 			int width = getNativeView().getWidth();
@@ -449,6 +455,9 @@ public abstract class TiUIView implements KrollProxyListener, OnFocusChangeListe
 
 	protected void applyTransform(Ti2DMatrix matrix)
 	{
+		if (layoutParams == null) {
+			return;
+		}
 		layoutParams.optionTransform = matrix;
 		if (animBuilder == null) {
 			animBuilder = new TiAnimationBuilder();
@@ -649,6 +658,12 @@ public abstract class TiUIView implements KrollProxyListener, OnFocusChangeListe
 
 	public void propertyChanged(String key, Object oldValue, Object newValue, KrollProxy proxy)
 	{
+		if (layoutParams == null) {
+			return;
+		}
+		if (proxy == null) {
+			return;
+		}
 		if (key.equals(TiC.PROPERTY_LEFT)) {
 			resetPostAnimationValues();
 			resetTranslationX();
@@ -951,6 +966,10 @@ public abstract class TiUIView implements KrollProxyListener, OnFocusChangeListe
 			return;
 		}
 
+		if (layoutParams == null) {
+			return;
+		}
+
 		boolean nativeViewNull = false;
 		if (nativeView == null) {
 			nativeViewNull = true;
@@ -1229,7 +1248,9 @@ public abstract class TiUIView implements KrollProxyListener, OnFocusChangeListe
 				@Override
 				public void run()
 				{
-					TiUIHelper.requestSoftInputChange(proxy, v);
+					if (proxy != null) {
+						TiUIHelper.requestSoftInputChange(proxy, v);
+					}
 				}
 			});
 		}
@@ -1447,7 +1468,7 @@ public abstract class TiUIView implements KrollProxyListener, OnFocusChangeListe
 
 			if (nativeView != null) {
 
-				if (borderView == null) {
+				if (borderView == null && proxy != null) {
 					Activity currentActivity = proxy.getActivity();
 					if (currentActivity == null) {
 						currentActivity = TiApplication.getAppCurrentActivity();
@@ -1522,7 +1543,7 @@ public abstract class TiUIView implements KrollProxyListener, OnFocusChangeListe
 	{
 		if (TiC.PROPERTY_BORDER_COLOR.equals(property)) {
 			borderView.setColor(value != null ? TiConvert.toColor(value.toString()) : Color.TRANSPARENT);
-			if (!proxy.hasProperty(TiC.PROPERTY_BORDER_WIDTH)) {
+			if (proxy != null && !proxy.hasProperty(TiC.PROPERTY_BORDER_WIDTH)) {
 				borderView.setBorderWidth(1);
 			}
 		} else if (TiC.PROPERTY_BORDER_RADIUS.equals(property)) {
@@ -1839,7 +1860,7 @@ public abstract class TiUIView implements KrollProxyListener, OnFocusChangeListe
 			return;
 		}
 
-		if (proxy.hasProperty(TiC.PROPERTY_TOUCH_ENABLED)) {
+		if (proxy != null && proxy.hasProperty(TiC.PROPERTY_TOUCH_ENABLED)) {
 			boolean enabled = TiConvert.toBoolean(proxy.getProperty(TiC.PROPERTY_TOUCH_ENABLED), true);
 			touchable.setClickable(enabled);
 		}
@@ -1872,6 +1893,9 @@ public abstract class TiUIView implements KrollProxyListener, OnFocusChangeListe
 	protected void registerForKeyPress(final View v)
 	{
 		if (v == null) {
+			return;
+		}
+		if (proxy == null) {
 			return;
 		}
 
