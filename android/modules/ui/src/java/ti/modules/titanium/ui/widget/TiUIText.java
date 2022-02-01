@@ -267,7 +267,7 @@ public class TiUIText extends TiUIView implements TextWatcher, OnEditorActionLis
 		}
 
 		if (d.containsKey(TiC.PROPERTY_PASSWORD_VISIBILITY_TOGGLE_ENABLED)) {
-			textInputLayout.setPasswordVisibilityToggleEnabled(
+			setPasswordVisibilityToggleEnabled(
 				TiConvert.toBoolean(d.get(TiC.PROPERTY_PASSWORD_VISIBILITY_TOGGLE_ENABLED), false));
 		}
 
@@ -303,6 +303,15 @@ public class TiUIText extends TiUIView implements TextWatcher, OnEditorActionLis
 		}
 	}
 
+	private void setPasswordVisibilityToggleEnabled(boolean enabled)
+	{
+		if (enabled) {
+			textInputLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
+		} else {
+			textInputLayout.setEndIconMode(TextInputLayout.END_ICON_NONE);
+		}
+	}
+
 	private void setPasswordToggleTintList(KrollDict d)
 	{
 		int toggleColor = Color.TRANSPARENT;
@@ -328,7 +337,7 @@ public class TiUIText extends TiUIView implements TextWatcher, OnEditorActionLis
 		int[][] textColorStates = new int[][] { new int[] { stateToUse }, new int[] {} };
 		int[] textColors = { toggleTintColor, toggleColor };
 		ColorStateList colorStateList = new ColorStateList(textColorStates, textColors);
-		textInputLayout.setPasswordVisibilityToggleTintList(colorStateList);
+		textInputLayout.setEndIconTintList(colorStateList);
 	}
 
 	private void updateTextField()
@@ -458,7 +467,7 @@ public class TiUIText extends TiUIView implements TextWatcher, OnEditorActionLis
 			handleFullscreen(proxy.getProperties());
 			restartInputMethodManager();
 		} else if (key.equals(TiC.PROPERTY_PASSWORD_VISIBILITY_TOGGLE_ENABLED)) {
-			textInputLayout.setPasswordVisibilityToggleEnabled(TiConvert.toBoolean(newValue, false));
+			setPasswordVisibilityToggleEnabled(TiConvert.toBoolean(newValue, false));
 		} else if (key.equals(TiC.PROPERTY_LINES)) {
 			if (!field) {
 				this.viewHeightInLines = TiConvert.toInt(newValue, 0);
