@@ -38,6 +38,7 @@ public abstract class TiUIFragment extends TiUIView implements Handler.Callback
 			fragment = createFragment();
 		} else {
 			TiCompositeLayout container = new TiCompositeLayout(activity, proxy) {
+				private boolean transactionCommited = false;
 				@Override
 				public boolean dispatchTouchEvent(MotionEvent ev)
 				{
@@ -48,12 +49,15 @@ public abstract class TiUIFragment extends TiUIView implements Handler.Callback
 				protected void onAttachedToWindow()
 				{
 					super.onAttachedToWindow();
-					FragmentManager manager = ((FragmentActivity) getContext()).getSupportFragmentManager();
-					FragmentTransaction transaction = manager.beginTransaction();
-					transaction.runOnCommit(onCommitRunnable);
-					fragment = createFragment();
-					transaction.add(getId(), fragment);
-					transaction.commitAllowingStateLoss();
+					if (!transactionCommited) {
+						transactionCommited = true;
+						FragmentManager manager = ((FragmentActivity) getContext()).getSupportFragmentManager();
+						FragmentTransaction transaction = manager.beginTransaction();
+						transaction.runOnCommit(onCommitRunnable);
+						fragment = createFragment();
+						transaction.add(getId(), fragment);
+						transaction.commitAllowingStateLoss();
+					}
 				}
 			};
 			container.setId(View.generateViewId());
